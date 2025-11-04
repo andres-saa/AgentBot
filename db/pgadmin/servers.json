@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Proyecto Postgres",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "mydb",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "ConnectNow": true
+    }
+  }
+}

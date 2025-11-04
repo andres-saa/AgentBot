@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: AgenteIa_redis_dev
+    env_file: ./db/.env
+    command: ['redis-server','--appendonly','yes','--requirepass','${REDIS_PASSWORD}']
+    volumes:
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+
+  api_chat_agente:
+    build: { context: ./backend/chat_agente, target: dev }
+    container_name: AgenteIa_api_chat_agente_dev
+    env_file: ./backend/chat_agente/.env
+    volumes:
+      - ./backend/chat_agente/app:/code
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on: [redis]
+    ports:
+      - '8000:80'
+    restart: unless-stopped
+
+  api_socket:
+    build: { context: ./backend/socket, target: dev }
+    container_name: AgenteIa_api_socket_dev
+    env_file: ./backend/socket/.env
+    volumes:
+      - ./backend/socket/app:/code
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on: [redis]
+    ports:
+      - '8001:80'
+    restart: unless-stopped
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: AgenteIa_redisinsight_dev
+    depends_on: [redis]
+    ports:
+      - '5540:5540'
+    volumes:
+      - redisinsight_data:/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  redisinsight_data:

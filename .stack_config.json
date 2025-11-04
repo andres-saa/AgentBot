@@ -1,0 +1,14 @@
+{
+  "project": "AgenteIa",
+  "domain": "arhook.com",
+  "email": "andrew19f@gmail.com",
+  "staging": false,
+  "use_pg": false,
+  "use_mongo": false,
+  "use_redis": true,
+  "backs": [
+    "chat_agente",
+    "socket"
+  ],
+  "fronts": []
+}

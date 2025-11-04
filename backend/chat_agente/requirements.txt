@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+psycopg2-binary
+python-jose
+passlib[bcrypt]
+python-dotenv
+redis
+httpx
+python-dotenv
+python-multipart                                                  
+requests
