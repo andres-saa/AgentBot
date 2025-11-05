@@ -2,23 +2,23 @@ version: '3.9'
 services:
   redis:
     image: redis:7-alpine
-    container_name: AgenteIa_redis
+    container_name: mi_ia_personal_redis
     env_file: ./db/.env
     command: ['redis-server','--appendonly','yes','--requirepass','${REDIS_PASSWORD}']
     volumes:
       - redis_data:/data
     restart: unless-stopped
 
-  api_chat_agente:
-    build: { context: ./backend/chat_agente, target: prod }
-    container_name: AgenteIa_api_chat_agente
-    env_file: ./backend/chat_agente/.env
+  api_chat:
+    build: { context: ./backend/chat, target: prod }
+    container_name: mi_ia_personal_api_chat
+    env_file: ./backend/chat/.env
     depends_on: [redis]
     restart: unless-stopped
 
   api_socket:
     build: { context: ./backend/socket, target: prod }
-    container_name: AgenteIa_api_socket
+    container_name: mi_ia_personal_api_socket
     env_file: ./backend/socket/.env
     depends_on: [redis]
     command: ["gunicorn","-k","uvicorn.workers.UvicornWorker","-w","1","-t","1","-b","0.0.0.0:80","main:app"]
@@ -26,25 +26,25 @@ services:
 
   proxy:
     build: { context: ./nginx }
-    container_name: AgenteIa_proxy
+    container_name: mi_ia_personal_proxy
     ports: [ '80:80', '443:443' ]
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:rw
       - ./nginx/proxy_params.conf:/etc/nginx/proxy_params.conf:ro
       - ./nginx/certbot/www:/var/www/certbot:ro
       - ./nginx/letsencrypt:/etc/letsencrypt:ro
-    depends_on: [redis, api_chat_agente, api_socket]
+    depends_on: [redis, api_chat, api_socket]
     restart: unless-stopped
 
   certbot:
     image: certbot/certbot:latest
-    container_name: AgenteIa_certbot
+    container_name: mi_ia_personal_certbot
     volumes:
       - ./nginx/certbot/www:/var/www/certbot
       - ./nginx/letsencrypt:/etc/letsencrypt
     depends_on: [proxy]
     entrypoint: sh
-    command: -c "if [ -n 'api.chat-agente.arhook.com api.socket.arhook.com' ]; then for d in api.chat-agente.arhook.com api.socket.arhook.com; do certbot certonly -n --keep-until-expiring --webroot -w /var/www/certbot -d $$d --email \"andrew19f@gmail.com\" --agree-tos --no-eff-email ; done; fi; trap exit TERM; while :; do certbot renew -n --webroot -w /var/www/certbot --quiet || true; sleep 12h; done"
+    command: -c "if [ -n 'api.chat.arhook.com api.socket.mi-ia-personal.arhook.com' ]; then for d in api.chat.arhook.com api.socket.mi-ia-personal.arhook.com; do certbot certonly -n --keep-until-expiring --webroot -w /var/www/certbot -d $$d --email \"andrew19f@gmail.com\" --agree-tos --no-eff-email ; done; fi; trap exit TERM; while :; do certbot renew -n --webroot -w /var/www/certbot --quiet || true; sleep 12h; done"
     restart: unless-stopped
 
 volumes:

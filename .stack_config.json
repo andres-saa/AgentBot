@@ -1,5 +1,5 @@
 {
-  "project": "AgenteIa",
+  "project": "mi_ia_personal",
   "domain": "arhook.com",
   "email": "andrew19f@gmail.com",
   "staging": false,
@@ -7,7 +7,7 @@
   "use_mongo": false,
   "use_redis": true,
   "backs": [
-    "chat_agente",
+    "chat",
     "socket"
   ],
   "fronts": []

@@ -2,14 +2,14 @@
 server {
     listen 443 ssl;
     http2 on;
-    server_name api.chat-agente.arhook.com;
+    server_name api.chat.arhook.com;
 
-    ssl_certificate /etc/letsencrypt/live/api.chat-agente.arhook.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/api.chat-agente.arhook.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/api.chat.arhook.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.chat.arhook.com/privkey.pem;
     include /etc/nginx/conf.d/ssl_params.conf;
 
     location / {
-        proxy_pass http://api_chat_agente:80;
+        proxy_pass http://api_chat:80;
         include /etc/nginx/proxy_params.conf;
     }
 }
@@ -17,10 +17,10 @@ server {
 server {
     listen 443 ssl;
     http2 on;
-    server_name api.socket.arhook.com;
+    server_name api.socket.mi-ia-personal.arhook.com;
 
-    ssl_certificate /etc/letsencrypt/live/api.socket.arhook.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/api.socket.arhook.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/api.socket.mi-ia-personal.arhook.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.socket.mi-ia-personal.arhook.com/privkey.pem;
     include /etc/nginx/conf.d/ssl_params.conf;
 
     location / {
